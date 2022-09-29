@@ -1,7 +1,11 @@
 (ns org.sg.sghub.main
-  (:require ["electron" :refer [app shell BrowserWindow dialog ipcMain Menu]]
-            ["process" :as process]
-            [cljs.nodejs :as nodejs]))
+  (:require
+   ["electron"
+    :as electron
+    :refer
+    [app shell BrowserWindow dialog ipcMain Menu webContents]]
+   ["process" :as process]
+   [cljs.nodejs :as nodejs]))
 
 (def path (nodejs/require "path"))
 (def url (nodejs/require "url"))
@@ -15,7 +19,7 @@
         options (clj->js {:type      "info"
                           :buttons   ["Ok"]
                           :defaultId 0
-                          :icon      (.join path (js* "__dirname") "assets" "clojure.png")
+                          :icon      (.join path (js* "__dirname") "assets" "korag.png")
                           :title     (or (str (:title message)) "No title")
                           :message   (or (str (:message message)) "No message")})]
     (.showMessageBox dialog @mainWindow options #())))
@@ -111,6 +115,11 @@
   (.on app "ready" #(initialize-main-window))
 
   (.on app "web-contents-created"
-       #(.on %2 "will-navigate" verify-url))
+       (fn [_ ^webContents web-contents]
+         (.on web-contents "will-navigate" verify-url)))
 
   (.on ipcMain "showDialog" #(show-dialog %2)))
+
+(comment
+
+  )

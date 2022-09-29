@@ -1,53 +1,48 @@
 (ns org.sg.sghub.renderer.main
-  (:require [reagent.dom :as r]
-            [re-frame.core :as rf]
-            [org.sg.sghub.renderer.events]))
+  (:require
+   [refx.alpha :as refx :refer [use-sub dispatch]]
+   [uix.core.alpha :as uix]
+   [uix.dom.alpha :as uix.dom]))
 
 (def debug? ^boolean goog.DEBUG)
+
+(defn button [{:keys [on-click]} text]
+  [:button.btn {:on-click on-click}
+   text])
+
+(defn app []
+  (let [state* (uix/state 0)]
+    [:div
+     [:h1 "Hurr"]
+     [:<>
+      [button
+       {:on-click #(swap! state* dec)} "-"]
+      [:span @state*]
+      [button
+       {:on-click #(swap! state* inc)} "+"]]]))
 
 (defn dev-setup
   []
   (when debug?
     (println "Development mode")))
 
-(defn send-message
-  [item]
-  (println (str "About to send " item))
-  (.api.send js/window (:channel item) (clj->js {:title   (:name item)
-                                                 :message (:message item)
-                                                 :detail  (:detail item)})))
-(defn get-value
-  [element]
-  (-> element .-target .-value))
-
-(defn main-component
-  []
-  [:h1 "hello"])
-
 (defn render
   []
   (println "Inside render")
-  (r/render [main-component]
-    (.getElementById js/document "app")))
+  (uix.dom/render [app] (.getElementById js/document "app")))
 
 (defn ^:dev/after-load clear-cache-and-render!
   []
   (println "Inside after load")
-  (rf/clear-subscription-cache!)
+  (refx/clear-subscription-cache!)
   (render))
 
-(defn ^:export main
-  []
-  (println "Inside main")
-  (rf/dispatch-sync [:initialize])
-  (dev-setup)
-  (render))
+(defn ^:export main []
+  (refx/dispatch-sync [:initialize])
+  (render)
+  (dev-setup))
 
 (comment
-
-
+  js/goog.global.window
   (js/console.log "lol")
-
-  (println "hi")
-
-  )
+  (println "hi"))

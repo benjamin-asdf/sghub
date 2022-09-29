@@ -21,3 +21,4 @@ resources/public/js
 resources/public/preload.js
 resources/public/main.js
 .DS_Store
+release-builds

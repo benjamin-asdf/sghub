@@ -5,16 +5,6 @@
                     "api"
                     (clj->js {}))
 
-;; (def exportInMainWorld
-;;   )
-
-;; (.exposeInMainWorld contextBridge
-;;                       "api"
-;;                       {}
-;;                       ;; (clj->js {:send (fn [channel data]
-;;                       ;;                   (.send ipcRenderer channel data))})
-;;                       )
-
 (defn main
   []
   )

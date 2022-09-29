@@ -1,0 +1,10 @@
+#!/bin/sh
+
+rm -rf release-builds
+npx electron-packager . --prune=true \
+                    --out=release-builds \
+                    --overwrite=true \
+                    --ignore="(.gitignore|.clj-kondo|.github|.shadow-cljs)"\
+                    --ignore="(dev|docs|imgs|\.md|\.iml|build.sh|pom.xml|karma.conf.js|target)" \
+                    --ignore="(project.clj|LICENSE)" \
+                    --icon=./resources/public/assets/korag.png

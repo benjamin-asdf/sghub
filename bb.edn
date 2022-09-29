@@ -1,0 +1,28 @@
+{:tasks
+ {:init
+  (defn shadow [command])
+  compile
+  (clojure
+   "-A:shadow-cljs" "compile"
+   "main"
+   "renderer"
+   "preload")
+  watch
+  (clojure
+   "-A:shadow-cljs" "watch"
+   "main"
+   "renderer"
+   "preload")
+  start
+  (shell
+   {:extra-env {"ELECTRON_DISABLE_SECURITY_WARNINGS" "true"}}
+   "npx electron .")
+  release
+  (clojure
+   "-A:shadow-cljs" "release"
+   "main"
+   "renderer"
+   "preload")
+  build
+  {:depends [release]
+   :task (shell "./script/build")}}}
