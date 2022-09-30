@@ -1,0 +1,8 @@
+
+* This is for
+
+You want to be keyboard driven.
+You currently do not use emacs.
+
+** create tickets at the speed of thought
+** search, as if jql was consult

@@ -1,0 +1,41 @@
+
+* dev
+
+#+begin_src shell
+  bb tasks
+#+end_src
+
+run shadow-cljs:
+#+begin_src
+  bb watch
+#+end_src
+
+as another process
+#+begin_src shell
+  bb start
+#+end_src
+
+it opens electron and we have a js runtime.
+Now you can ~cider-connect-cljs~ or equivalent.
+Note that .nrepl-port is set correctly by shadow-cljs.
+
+
+* electron parts
+
+main.cljs - the electron node part (application)
+renderer - the browser part
+
+* build
+
+#+begin_src
+  bb build
+#+end_src
+
+output in release-builds
+
+
+* todos
+
+** TODO advance compile node part
+** TODO make windows builds
+** TODO make mac builds
