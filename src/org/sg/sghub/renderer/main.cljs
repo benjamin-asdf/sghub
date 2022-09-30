@@ -13,13 +13,15 @@
 (defn app []
   (let [state* (uix/state 0)]
     [:div
-     [:h1 "Hurr"]
-     [:<>
-      [button
-       {:on-click #(swap! state* dec)} "-"]
-      [:span @state*]
-      [button
-       {:on-click #(swap! state* inc)} "+"]]]))
+     [:div {:class "dark"}]
+     [:div {:class "bg-white dark:bg-black"}
+      [:h1 "Hurr"]
+      [:<>
+       [button
+        {:on-click #(swap! state* dec)} "-"]
+       [:span @state*]
+       [button
+        {:on-click #(swap! state* inc)} "+"]]]]))
 
 (defn dev-setup
   []

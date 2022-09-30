@@ -27,4 +27,8 @@
   {:depends [release]
    :task (shell "./script/build")}
   tw
-  (shell "npx" "tailwind" "-i" "./src/org/sg/sghub/style.css" "-o" "./resources/public/site.css")}}
+  (shell "npx" "tailwind" "-i" "./src/org/sg/sghub/style.css" "-o" "./resources/public/site.css")
+  ;; watch tw
+
+
+  }}
