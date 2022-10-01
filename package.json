@@ -5,7 +5,6 @@
   "main": "resources/public/main.js",
   "scripts": {
     "clean": "rm -rf resources/public/js/ && rm -rf resources/public/css && rm -rf resources/public/main.js && rm -rf resources/public/preload.js",
-    "tw": "npx tailwind -i src/app/tailwind/style.css -o resources/public/css/site.css",
     "watch:css": "onchange 'src/app/tailwind/*css' -- npm run tw"
   },
   "devDependencies": {
@@ -13,6 +12,7 @@
     "electron": "^20.0.0",
     "electron-packager": "^16.0.0",
     "postcss": "^8.4.4",
+    "source-map-support": "^0.5.21",
     "tailwindcss": "^2.2.19"
   },
   "dependencies": {

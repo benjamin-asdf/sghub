@@ -5,6 +5,4 @@
                     "api"
                     (clj->js {}))
 
-(defn main
-  []
-  )
+(defn main [])

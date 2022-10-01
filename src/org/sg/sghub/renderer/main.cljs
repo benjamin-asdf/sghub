@@ -10,12 +10,13 @@
   [:button.btn {:on-click on-click}
    text])
 
-(defn app []
+ (defn app []
   (let [state* (uix/state 0)]
-    [:div
-     [:div {:class "dark"}]
-     [:div {:class "bg-white dark:bg-black"}
-      [:h1 "Hurr"]
+    [:html
+     {:class "dark"}
+     [:div
+      {:class ["dark:bg-black" "text-white"]}
+      [:h1 "Hurr 2"]
       [:<>
        [button
         {:on-click #(swap! state* dec)} "-"]
@@ -30,12 +31,10 @@
 
 (defn render
   []
-  (println "Inside render")
   (uix.dom/render [app] (.getElementById js/document "app")))
 
 (defn ^:dev/after-load clear-cache-and-render!
   []
-  (println "Inside after load")
   (refx/clear-subscription-cache!)
   (render))
 
@@ -45,6 +44,7 @@
   (dev-setup))
 
 (comment
-  js/goog.global.window
+  (render)
+   js/goog.global.window
   (js/console.log "lol")
   (println "hi"))

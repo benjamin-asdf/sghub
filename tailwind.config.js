@@ -1,6 +1,6 @@
 module.exports = {
   purge: [],
-    darkMode: 'class',
+  darkMode: 'class',
   theme: {
     extend: {},
   },

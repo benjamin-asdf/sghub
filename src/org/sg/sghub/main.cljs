@@ -1,9 +1,6 @@
 (ns org.sg.sghub.main
   (:require
-   ["electron"
-    :as electron
-    :refer
-    [app shell BrowserWindow dialog ipcMain Menu webContents]]
+   ["electron" :as electron :refer [app shell BrowserWindow dialog ipcMain Menu webContents]]
    ["process" :as process]
    [cljs.nodejs :as nodejs]))
 
@@ -67,7 +64,7 @@
                               :contextIsolation           true
                               :enableRemoteModule         false
                               :disableBlinkFeatures       "AuxClick"
-                              :preload                    (.join path (js* "__dirname") "preload_js.js")}
+                              :preload                    (.join path (js* "__dirname") "preload.js")}
              :show           false
              :modal          false
              :icon           (.join path (js* "__dirname") "assets" "clojure.png")})))
@@ -86,9 +83,10 @@
   []
   (println "Inside main function")
   (let [window     (reset! mainWindow (create-browser-window))
-        index-path (clj->js {:pathname (.join path
-                                              (js* "__dirname")
-                                              "index.html")
+        index-path (clj->js {:pathname
+                             (.join path
+                                    (js* "__dirname")
+                                    "index.html")
                              :protocol "file:"
                              :slashes  true})]
     (println "Index path " index-path)
@@ -108,11 +106,12 @@
   []
   (println "Inside main function")
 
-  (.on app "window-all-closed" #(when-not (= (.-platform process) "darwin")
-                                  (println "Quit application")
-                                  (.quit app)))
+  (.on app "window-all-closed"
+       #(when-not (= (.-platform process) "darwin")
+          (println "Quit application")
+          (.quit app)))
 
-  (.on app "ready" #(initialize-main-window))
+  (.on app "ready" (fn [] (initialize-main-window)))
 
   (.on app "web-contents-created"
        (fn [_ ^webContents web-contents]
@@ -121,5 +120,8 @@
   (.on ipcMain "showDialog" #(show-dialog %2)))
 
 (comment
+
+ (js/Object.getOwnPropertyNames js*)
+ (println "hur")
 
   )
