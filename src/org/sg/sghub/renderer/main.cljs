@@ -5,24 +5,29 @@
    [uix.dom.alpha :as uix.dom]))
 
 (def debug? ^boolean goog.DEBUG)
+;; (def findp (js/require "find-process"))
+;; (def ipc-renderer (.-ipcRenderer (js/require "electron")))
+;; (def dir (str js/__dirname "/.."))
+;; (def fpath (js/require "path"))
+
 
 (defn button [{:keys [on-click]} text]
-  [:button.btn {:on-click on-click}
-   text])
+  [:button.btn {:on-click on-click :style {:color "cyan"}} text])
 
- (defn app []
+(defn create-issue []
+  )
+
+(defn app []
   (let [state* (uix/state 0)]
-    [:html
-     {:class "dark"}
-     [:div
-      {:class ["dark:bg-black" "text-white"]}
-      [:h1 "Hurr 2"]
-      [:<>
-       [button
-        {:on-click #(swap! state* dec)} "-"]
-       [:span @state*]
-       [button
-        {:on-click #(swap! state* inc)} "+"]]]]))
+    [:div
+     [:h1 "Create issue"]
+     [:div (try (str js/__dirname "/..") (catch js/Error _ "no"))]
+     [:<>
+      [button
+       {:on-click #(swap! state* dec)} "-"]
+      [:span @state*]
+      [button
+       {:on-click #(swap! state* inc)} "+"]]]))
 
 (defn dev-setup
   []
@@ -45,6 +50,11 @@
 
 (comment
   (render)
-   js/goog.global.window
+  js/goog.global.window
   (js/console.log "lol")
-  (println "hi"))
+  (println "hi")
+  js/frames
+
+  js/require
+
+  )

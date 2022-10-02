@@ -1,4 +1,4 @@
-{:paths ["src"]
+{:paths ["src" "resources"]
  :deps
  {org.clojure/clojurescript {:mvn/version "1.11.54"}
   refx/refx.core {:git/url "https://github.com/ferdinand-beyer/refx.git"
@@ -15,8 +15,12 @@
               :deps/root "rn"
               :sha "843abbe4c4b331fbb0d7d197ecd038b466b48e43"}}
  :aliases
- {:shadow-cljs
-  {:extra-deps {thheller/shadow-cljs {:mvn/version "2.20.2"}
-                cider/cider-nrepl {:mvn/version "0.28.6"}
-                cider/piggieback {:mvn/version "0.5.3"}}
-   :main-opts ["-m" "shadow.cljs.devtools.cli"]}}}
+ {:shadow
+  {:extra-deps
+   {thheller/shadow-cljs {:mvn/version "2.20.2"}}
+   }
+  :dev {:extra-paths ["dev" "test"]}
+  :shadow-cli
+  {:extra-deps
+   {thheller/shadow-cljs {:mvn/version "2.20.2"}}
+   :main-opts ["--main" "shadow.cljs.devtools.cli"]}}}

@@ -1,17 +1,20 @@
 (ns org.sg.sghub.main
   (:require
-   ["electron" :as electron :refer [app shell BrowserWindow dialog ipcMain Menu webContents]]
+   ["electron" :as electron :refer
+    [app shell BrowserWindow dialog ipcMain Menu webContents]]
    ["process" :as process]
    [cljs.nodejs :as nodejs]))
 
 (def path (nodejs/require "path"))
 (def url (nodejs/require "url"))
+(def main-window (atom nil))
+(defn- ^js/electron.BrowserWindow get-main-window []
+  @main-window)
 
-(def mainWindow (atom nil))
+;; (def ls (js/require "electron-localstorage"))
 
 (defn show-dialog
   [data]
-  (println "Inside show dialog: " data)
   (let [message (js->clj data :keywordize-keys true)
         options (clj->js {:type      "info"
                           :buttons   ["Ok"]
@@ -19,7 +22,7 @@
                           :icon      (.join path (js* "__dirname") "assets" "korag.png")
                           :title     (or (str (:title message)) "No title")
                           :message   (or (str (:message message)) "No message")})]
-    (.showMessageBox dialog @mainWindow options #())))
+    (.showMessageBox dialog (get-main-window) options #())))
 
 (defn create-menu-template
   []
@@ -31,43 +34,55 @@
                    :enabled true}
                   {:type "separator"}
                   {:role "quit"}]})
-     {:label   "File"
-      :submenu [{:label       "Save"
-                 :accelerator "CmdOrCtrl+S"
-                 :click       (fn []
-                                (show-dialog (clj->js {:title   "Saving"
-                                                       :message "Saving"})))}
-                {:type "separator"}
-                (if darwin?
-                  {:role "close"}
-                  {:role "quit"})]}
      {:label "View"
       :submenu [{:role "toggledevtools"}]}
      {:role "help"
-      :submenu [{:label "Documentation"
-                 :click (fn []
-                          (.openExternal shell "https://www.github.com"))}
-                {:type "separator"}
-                {:label "Bad documentation link"
-                 :click (fn []
-                          (.openExternal shell "https://www.example.com"))}]}]))
+      :submenu
+      [{:label "Documentation"
+        :click (fn []
+                 (.openExternal shell "https://www.github.com"))}
+       {:type "separator"}
+       {:label "Bad documentation link"
+        :click (fn []
+                 (.openExternal shell "https://www.example.com"))}]}]))
+
+
+
+     ;; :width (max (or (.getItem ls "width") 800) 800)
+     ;; :height (max (or (.getItem ls "height") 600) 600)
+     ;; :titleBarStyle "hiddenInset"
 
 (defn create-browser-window
   []
   (BrowserWindow.
-   (clj->js {:title          "CLJS electron"
-             :width          1280
-             :height         800
-             :webPreferences {:nodeIntegration            false
-                              :nodeIntegrationInWorker    true
-                              :nodeIntegrationInSubFrames false
-                              :contextIsolation           true
-                              :enableRemoteModule         false
-                              :disableBlinkFeatures       "AuxClick"
-                              :preload                    (.join path (js* "__dirname") "preload.js")}
-             :show           false
-             :modal          false
-             :icon           (.join path (js* "__dirname") "assets" "clojure.png")})))
+   (clj->js
+    {:title          "sghub"
+     :transparent    true
+     :alwaysOnTop    true
+     :frame          false
+     :opacity        0.75
+     :webPreferences
+     {:zoomFactor 1.5
+      :nodeIntegration true
+      ;; :nodeIntegrationInWorker true
+      ;; :nodeIntegrationInSubFrames true
+      }
+     :show           false}))
+  ;; (BrowserWindow.
+  ;;  (clj->js {:title          "CLJS electron"
+  ;;            :width          1280
+  ;;            :height         800
+  ;;            :webPreferences {:nodeIntegration            false
+  ;;                             :nodeIntegrationInWorker    true
+  ;;                             :nodeIntegrationInSubFrames false
+  ;;                             :contextIsolation           true
+  ;;                             :enableRemoteModule         false
+  ;;                             :disableBlinkFeatures       "AuxClick"
+  ;;                             :preload                    (.join path (js* "__dirname") "preload.js")}
+  ;;            :show           false
+  ;;            :modal          false
+  ;;            :icon           (.join path (js* "__dirname") "assets" "clojure.png")}))
+  )
 
 (defn verify-url
   [event navigationUrl]
@@ -81,26 +96,28 @@
 
 (defn initialize-main-window
   []
-  (println "Inside main function")
-  (let [window     (reset! mainWindow (create-browser-window))
+  (let [window (reset! main-window (create-browser-window))
         index-path (clj->js {:pathname
                              (.join path
                                     (js* "__dirname")
                                     "index.html")
                              :protocol "file:"
-                             :slashes  true})]
+                             :slashes true})]
     (println "Index path " index-path)
+
     (.loadURL window
               (.format url index-path))
 
     (.setApplicationMenu Menu
-                         (.buildFromTemplate Menu
-                                             (clj->js (->> (create-menu-template)
-                                                           (remove nil?)
-                                                           (mapv identity)))))
+                         (.buildFromTemplate
+                          Menu
+                          (clj->js (->> (create-menu-template)
+                                        (remove nil?)
+                                        (mapv identity)))))
 
-    (.on window "closed" #(reset! mainWindow nil))
+    (.on window "closed" #(reset! main-window nil))
     (.webContents.on window "did-finish-load" #(.show window))))
+
 
 (defn main
   []
@@ -113,8 +130,13 @@
 
   (.on app "ready" (fn [] (initialize-main-window)))
 
+  ;; (.on app "resize" (fn []
+  ;;                     (let [[w h] (js->clj (.getSize (get-main-window)))]
+  ;;                       (.setItem ls "width" w)
+  ;;                       (.setItem ls "height" h))))
+
   (.on app "web-contents-created"
-       (fn [_ ^webContents web-contents]
+       (fn [_ ^js/electron.webContents web-contents]
          (.on web-contents "will-navigate" verify-url)))
 
   (.on ipcMain "showDialog" #(show-dialog %2)))

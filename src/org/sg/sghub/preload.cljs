@@ -1,8 +1,16 @@
 (ns org.sg.sghub.preload
-  (:require ["electron" :refer [contextBridge ipcRenderer]]))
+  (:require
+   ["electron" :refer [contextBridge ipcRenderer]]))
 
-(.exposeInMainWorld contextBridge
-                    "api"
-                    (clj->js {}))
+
+(.exposeInMainWorld
+ contextBridge "electron"
+ (clj->js
+  {
+   ;; :cmd (fn [args])
+   :showDialog (fn [dat] (.send ipcRenderer dat))
+   })
+
+ )
 
 (defn main [])

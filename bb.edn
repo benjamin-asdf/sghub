@@ -1,34 +1,14 @@
 {:tasks
- {:init
-  (defn shadow [command])
-  compile
-  (clojure
-   "-A:shadow-cljs" "compile"
-   "main"
-   "renderer"
-   "preload")
+ {compile
+  (clojure "-M:shadow-cli:dev" "compile" "main" "renderer" "preload")
   watch
-  (clojure
-   "-A:shadow-cljs" "watch"
-   "main"
-   "renderer"
-   "preload")
+  (clojure "-M:shadow-cli:dev" "watch" "main" "renderer" "preload")
   start
   (shell
    {:extra-env {"ELECTRON_DISABLE_SECURITY_WARNINGS" "true"}}
    "npx electron .")
-  release
-  (clojure
-   "-A:shadow-cljs" "release"
-   "main"
-   "renderer"
-   "preload")
+  release (clojure "-M:shadow-cli:dev" "release" "main" "renderer" "preload")
   build
   {:depends [release]
    :task (shell "./script/build")}
-  tw
-  (shell "npx" "tailwind" "-i" "./src/org/sg/sghub/style.css" "-o" "./resources/public/site.css")
-  ;; watch tw
-
-
-  }}
+  tw (shell "npx" "tailwind" "-i" "./src/org/sg/sghub/style.css" "-o" "./resources/public/site.css")}}
