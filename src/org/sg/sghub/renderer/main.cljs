@@ -2,7 +2,9 @@
   (:require
    [refx.alpha :as refx :refer [use-sub dispatch]]
    [uix.core.alpha :as uix]
-   [uix.dom.alpha :as uix.dom]))
+   [uix.dom.alpha :as uix.dom]
+   [cljs.nodejs :as nodejs]))
+
 
 (def debug? ^boolean goog.DEBUG)
 ;; (def findp (js/require "find-process"))
@@ -21,7 +23,6 @@
   (let [state* (uix/state 0)]
     [:div
      [:h1 "Create issue"]
-     [:div (try (str js/__dirname "/..") (catch js/Error _ "no"))]
      [:<>
       [button
        {:on-click #(swap! state* dec)} "-"]
@@ -55,6 +56,17 @@
   (println "hi")
   js/frames
 
-  js/require
+  (def p (nodejs/require "node:child_process"))
+
+  (println
+   (str (p.execFileSync "pwd")))
+  (js/console.log
+   (str (p.execFileSync "pwd")))
+
+  (nodejs/require "path")
+  (def path (nodejs/require "path"))
+  js/__dirname
+
+  (js/Object.getOwnPropertyNames path)
 
   )

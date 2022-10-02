@@ -1,7 +1,7 @@
 (ns org.sg.sghub.main
   (:require
    ["electron" :as electron :refer
-    [app shell BrowserWindow dialog ipcMain Menu webContents]]
+    [app shell BrowserWindow dialog ipcMain Menu]]
    ["process" :as process]
    [cljs.nodejs :as nodejs]))
 
@@ -143,7 +143,16 @@
 
 (comment
 
- (js/Object.getOwnPropertyNames js*)
- (println "hur")
+  (js/Object.getOwnPropertyNames js*)
+  (println "hur")
+  (js/console.log "hur")
+
+  (def o #js {:foo :bar})
+  o.foo
+
+  (def p (nodejs/require "node:child_process"))
+  (str (p.execFileSync "pwd"))
+
+
 
   )
