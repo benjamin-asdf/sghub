@@ -1,13 +1,13 @@
 {:tasks
  {compile
-  (clojure "-M:shadow-cli:dev" "compile" "main" "renderer" "preload")
+  (clojure "-M:shadow-cli:dev" "compile" "main" "renderer")
   watch
-  (clojure "-M:shadow-cli:dev" "watch" "main" "renderer" "preload")
+  (clojure "-M:shadow-cli:dev" "watch" "main" "renderer" )
   start
   (shell
    {:extra-env {"ELECTRON_DISABLE_SECURITY_WARNINGS" "true"}}
    "npx electron .")
-  release (clojure "-M:shadow-cli:dev" "release" "main" "renderer" "preload")
+  release (clojure "-M:shadow-cli:dev" "release" "main" "renderer" )
   build
   {:depends [release]
    :task (shell "./script/build")}

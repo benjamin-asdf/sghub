@@ -2,9 +2,7 @@
   (:require
    [refx.alpha :as refx :refer [use-sub dispatch]]
    [uix.core.alpha :as uix]
-   [uix.dom.alpha :as uix.dom]
-   [cljs.nodejs :as nodejs]))
-
+   [uix.dom.alpha :as uix.dom]))
 
 (def debug? ^boolean goog.DEBUG)
 ;; (def findp (js/require "find-process"))
@@ -22,6 +20,7 @@
 (defn app []
   (let [state* (uix/state 0)]
     [:div
+     {:style {:background "black" :color "white"}}
      [:h1 "Create issue"]
      [:<>
       [button
@@ -66,7 +65,6 @@
   (nodejs/require "path")
   (def path (nodejs/require "path"))
   js/__dirname
-
   (js/Object.getOwnPropertyNames path)
 
   )

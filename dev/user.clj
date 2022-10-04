@@ -8,8 +8,7 @@
 (def repl         (lazy-fn 'shadow.cljs.devtools.api/repl))
 
 (defn cljs
-  ([] (cljs
-       [:renderer :main :preload]))
+  ([] (cljs [:renderer :main]))
   ([build-ids]
    (start!)
    (doseq
@@ -22,8 +21,12 @@
   ;; (shadow.cljs.devtools.api/repl-runtimes :renderer)
   (repl :renderer)
   (repl )
-  (cljs [:renderer])
-  ((lazy-fn 'shadow.cljs.devtools.api/nrepl-select) :renderer)
+  (cljs)
+
+  ((lazy-fn 'shadow.cljs.devtools.api/nrepl-select) :main)
+
+
+  (shadow.cljs.devtools.api/repl :main)
 
 
 

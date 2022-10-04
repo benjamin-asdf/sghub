@@ -7,11 +7,13 @@
 
 (def path (nodejs/require "path"))
 (def url (nodejs/require "url"))
-(def main-window (atom nil))
+(defonce main-window (atom nil))
 (defn- ^js/electron.BrowserWindow get-main-window []
   @main-window)
 
 ;; (def ls (js/require "electron-localstorage"))
+
+
 
 (defn show-dialog
   [data]
@@ -56,17 +58,15 @@
   []
   (BrowserWindow.
    (clj->js
-    {:title          "sghub"
+    {:title          "SgHub"
      :transparent    true
      :alwaysOnTop    true
      :frame          false
      :opacity        0.75
      :webPreferences
-     {:zoomFactor 1.5
-      :nodeIntegration true
-      ;; :nodeIntegrationInWorker true
-      ;; :nodeIntegrationInSubFrames true
-      }
+     {:nodeIntegration true
+      :preload
+      (.join path (js* "__dirname") "preload.js")}
      :show           false}))
   ;; (BrowserWindow.
   ;;  (clj->js {:title          "CLJS electron"
@@ -96,14 +96,14 @@
 
 (defn initialize-main-window
   []
-  (let [window (reset! main-window (create-browser-window))
+  (let [window (reset!
+                main-window
+                (create-browser-window))
+
         index-path (clj->js {:pathname
-                             (.join path
-                                    (js* "__dirname")
-                                    "index.html")
+                             (.join path (js* "__dirname") "index.html")
                              :protocol "file:"
                              :slashes true})]
-    (println "Index path " index-path)
 
     (.loadURL window
               (.format url index-path))
@@ -121,14 +121,23 @@
 
 (defn main
   []
-  (println "Inside main function")
+  (println "Inside main function 2")
 
   (.on app "window-all-closed"
        #(when-not (= (.-platform process) "darwin")
           (println "Quit application")
           (.quit app)))
 
-  (.on app "ready" (fn [] (initialize-main-window)))
+  (.on app "ready"
+       (fn []
+         (println "app ready")
+         (initialize-main-window)))
+
+  (.on app "activate"
+       (fn []
+         (when-not
+             (seq
+              (electron/BrowserWindow.getAllWindows)) (initialize-main-window))))
 
   ;; (.on app "resize" (fn []
   ;;                     (let [[w h] (js->clj (.getSize (get-main-window)))]
@@ -146,13 +155,10 @@
   (js/Object.getOwnPropertyNames js*)
   (println "hur")
   (js/console.log "hur")
-
   (def o #js {:foo :bar})
   o.foo
 
   (def p (nodejs/require "node:child_process"))
   (str (p.execFileSync "pwd"))
-
-
-
+  @main-window
   )

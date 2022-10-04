@@ -6,13 +6,6 @@
                  {:infer-externs true
                   :optimizations :simple}}
 
-          :preload {:target :node-script
-                    :output-to "resources/public/preload.js"
-                    :main org.sg.sghub.preload/main
-                    :compiler-options
-                    {:infer-externs true
-                     :optimizations :simple}}
-
           :renderer {:target :browser
                      :output-dir "resources/public/js"
                      :asset-path "js"

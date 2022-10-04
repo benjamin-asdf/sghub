@@ -5,20 +5,18 @@
   <title>SGHub</title>
   <meta charset="UTF8" />
   <link rel="stylesheet" href="site.css" />
+ <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->
 </head>
 
 <body>
+    We are using Node.js <span id="node-version"></span>,
+    Chromium <span id="chrome-version"></span>,
+    and Electron <span id="electron-version"></span>.
 
-  <div id="app">
-  </div>
-
+  <div id="app"> </div>
 </body>
 
-<script src="js/renderer.js">
-</script>
-
-<script>
-  org.sg.sghub.renderer.main.main();
-</script>
+<script src="js/renderer.js"> </script>
+<script> org.sg.sghub.renderer.main.main(); </script>
 
 </html>
